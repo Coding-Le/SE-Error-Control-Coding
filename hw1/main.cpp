@@ -4,6 +4,8 @@
 #include<time.h>
 #include<math.h>
 #include<stdlib.h>
+#include<fstream>
+#include<cstdlib>
 using namespace std;
 #define L 1000
 int source_arr[L];
@@ -82,7 +84,7 @@ int main()
 }*/
 int* generator(int length) {
 	double token;
-	CLCRandNum temp;
+	CLCRandNum temp = CLCRandNum();
 	temp.SetSeed(0);
 	for (int i = 0; i < length; i++) {
 		token = temp.Uniform();   // generate number between 0~1
@@ -97,7 +99,7 @@ int *encode(int *src_arr, int length) {
 	return encode_arr;
 }
 double *add_noise(int *encode_arr, int length, double delta) {
-	CLCRandNum temp;
+	CLCRandNum temp = CLCRandNum();
 	temp.SetSeed(0);
 	temp.Normal(total_arr, length);
 	for (int i = 0; i < length; i++) {
@@ -123,8 +125,8 @@ int error_num(int *source_arr, int *decode_arr, int length) {
 double calculate_delta(double E_No) {
 	double temp = E_No;
 	temp = pow(10,temp/10);
-	temp = 1 / temp;
-	return temp/2;
+	temp = sqrt(0.5 / temp);
+	return temp;
 }
 int main() {
 	double *E_No = new double[100];
@@ -135,7 +137,15 @@ int main() {
 		delta[i] = calculate_delta(E_No[i]);
 		cout << delta[i] << endl;
 	}
-	for (int i = 2; i < 100; i++) {
+	fstream DataWriter;
+	DataWriter.open("data.txt", ios::out);
+	if (!DataWriter) {
+		cout << "Create File Error" << endl;
+		exit(0);
+	}
+	DataWriter << "Es/No       Bit-Error Probability" << endl;
+	cout << "Es/No" << "       Bit-Error Probability" << endl;
+ 	for (int i = 2; i < 100; i++) {
 		int total_error = 0;
 		for (int j = 0; j < 1000000; j++) {
 			int *source_arr = generator(L);
@@ -144,7 +154,10 @@ int main() {
 			int *decode_arr = decode(total_arr, L);
 			total_error += error_num(source_arr,decode_arr,L);
 		}
-		cout << E_No[i] << ",    " << total_error << endl;
+		cout.precision(20);
+		cout << "X: " << E_No[i] << ",               " << "Y: " << total_error << "*10^(-9)" << endl;
+		DataWriter << E_No[i] << "         " << total_error << "\n";
 	}
+	DataWriter.close();
 	system("pause");
 }
