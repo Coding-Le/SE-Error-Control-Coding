@@ -1,5 +1,0 @@
-This is a simple implementation for AWGN+BPSK channel transpotation.
-You should first run the main.cpp to get the corresponding data.txt
-which stores many data for SNC and Bit-error-Rate.
-After this, you can run the main.m in matlab(also include the data.txt)
-to get the corresponding graph.

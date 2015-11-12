@@ -135,7 +135,6 @@ int main() {
 		double temp_int = i;
 		E_No[i] = double(temp_int / 10);
 		delta[i] = calculate_delta(E_No[i]);
-		cout << delta[i] << endl;
 	}
 	fstream DataWriter;
 	DataWriter.open("data.txt", ios::out);
@@ -143,8 +142,8 @@ int main() {
 		cout << "Create File Error" << endl;
 		exit(0);
 	}
-	DataWriter << "Es/No       Bit-Error Probability" << endl;
-	cout << "Es/No" << "       Bit-Error Probability" << endl;
+	DataWriter << "   Es/No         Bit-Error Probability" << endl;
+	cout << "   Es/No" << "         Bit-Error Probability" << endl;
  	for (int i = 2; i < 100; i++) {
 		int total_error = 0;
 		for (int j = 0; j < 1000000; j++) {
@@ -154,9 +153,9 @@ int main() {
 			int *decode_arr = decode(total_arr, L);
 			total_error += error_num(source_arr,decode_arr,L);
 		}
-		cout.precision(20);
-		cout << "X: " << E_No[i] << ",               " << "Y: " << total_error << "*10^(-9)" << endl;
-		DataWriter << E_No[i] << "         " << total_error << "\n";
+		cout.precision(4);
+		cout << "X: " << fixed << E_No[i] << ",         " << "Y: " << total_error << "*10^(-9)" << endl;
+		DataWriter << E_No[i] << "       " << total_error << "\n";
 	}
 	DataWriter.close();
 	system("pause");
